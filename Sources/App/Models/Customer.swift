@@ -6,25 +6,31 @@ final class Customer: Model {
     let storage = Storage()
 
     var name: String
+    var surname: String
+    var personalCode: String
 
-    /// The column names in the database
-    static let idKey = "id"
-    static let nameKey = "name"
-
-    init(name: String) {
+    init(name: String, surname: String, personalCode: String) {
         self.name = name
+        self.surname = name
+        self.personalCode = personalCode
     }
 
     init(row: Row) throws {
-        name = try row.get(Customer.nameKey)
+        name = try row.get("name")
+        surname = try row.get("surname")
+        personalCode = try row.get("personal_code")
     }
 
     func makeRow() throws -> Row {
         var row = Row()
-        try row.set(Customer.nameKey, name)
+        try row.set("name", name)
+        try row.set("surname", surname)
+        try row.set("personal_code", personalCode)
         return row
     }
 }
+
+extension Customer: Timestampable { }
 
 // MARK: Fluent Preparation
 extension Customer: Preparation {
@@ -32,7 +38,11 @@ extension Customer: Preparation {
     static func prepare(_ database: Database) throws {
         try database.create(self) { builder in
             builder.id()
-            builder.string(Customer.nameKey)
+            builder.string("name")
+            builder.string("surname")
+            builder.string("personal_code")
+            builder.date(Customer.createdAtKey)
+            builder.date(Customer.updatedAtKey)
         }
     }
 
@@ -51,14 +61,20 @@ extension Customer: Preparation {
 extension Customer: JSONConvertible {
     convenience init(json: JSON) throws {
         try self.init(
-            name: json.get(Customer.nameKey)
+            name: json.get("name"),
+            surname: json.get("surname"),
+            personalCode: json.get("personal_code")
         )
     }
 
     func makeJSON() throws -> JSON {
         var json = JSON()
-        try json.set(Customer.idKey, id)
-        try json.set(Customer.nameKey, name)
+        try json.set("id", id)
+        try json.set("name", name)
+        try json.set("surname", surname)
+        try json.set("personal_code", personalCode)
+        try json.set(Customer.createdAtKey, createdAt)
+        try json.set(Customer.updatedAtKey, updatedAt)
         return json
     }
 }
@@ -76,10 +92,14 @@ extension Customer: Updateable {
     // Add as many updateable keys as you like here.
     public static var updateableKeys: [UpdateableKey<Customer>] {
         return [
-            // If the request contains a String at key "content"
-            // the setter callback will be called.
-            UpdateableKey(Customer.nameKey, String.self) { customer, name in
+            UpdateableKey("name", String.self) { customer, name in
                 customer.name = name
+            },
+            UpdateableKey("surname", String.self) { customer, surname in
+                customer.surname = surname
+            },
+            UpdateableKey("personal_code", String.self) { customer, personalCode in
+                customer.personalCode = personalCode
             }
         ]
     }

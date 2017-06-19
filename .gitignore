@@ -12,4 +12,5 @@ xcuserdata
 DerivedData/
 .DS_Store
 
+reh.sqlite
 # End of https://www.gitignore.io/api/vapor

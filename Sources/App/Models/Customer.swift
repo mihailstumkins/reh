@@ -42,6 +42,7 @@ extension Customer: Preparation {
             builder.string("surname")
             builder.string("personal_code")
         }
+        try database.index("personal_code", for: Customer.self)
     }
 
     /// Undoes what was done in `prepare`

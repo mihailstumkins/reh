@@ -11,7 +11,7 @@ final class Customer: Model {
 
     init(name: String, surname: String, personalCode: String) {
         self.name = name
-        self.surname = name
+        self.surname = surname
         self.personalCode = personalCode
     }
 
@@ -41,8 +41,6 @@ extension Customer: Preparation {
             builder.string("name")
             builder.string("surname")
             builder.string("personal_code")
-            builder.date(Customer.createdAtKey)
-            builder.date(Customer.updatedAtKey)
         }
     }
 
@@ -61,20 +59,21 @@ extension Customer: Preparation {
 extension Customer: JSONConvertible {
     convenience init(json: JSON) throws {
         try self.init(
-            name: json.get("name"),
-            surname: json.get("surname"),
-            personalCode: json.get("personal_code")
+            name: json.get("attributes.name"),
+            surname: json.get("attributes.surname"),
+            personalCode: json.get("attributes.personal_code")
         )
     }
 
     func makeJSON() throws -> JSON {
         var json = JSON()
+        try json.set("type", "customers")
         try json.set("id", id)
-        try json.set("name", name)
-        try json.set("surname", surname)
-        try json.set("personal_code", personalCode)
-        try json.set(Customer.createdAtKey, createdAt)
-        try json.set(Customer.updatedAtKey, updatedAt)
+        try json.set("attributes.name", name)
+        try json.set("attributes.surname", surname)
+        try json.set("attributes.personal_code", personalCode)
+        try json.set("attributes.\(Customer.createdAtKey)", createdAt)
+        try json.set("attributes.\(Customer.updatedAtKey)", updatedAt)
         return json
     }
 }
@@ -92,13 +91,13 @@ extension Customer: Updateable {
     // Add as many updateable keys as you like here.
     public static var updateableKeys: [UpdateableKey<Customer>] {
         return [
-            UpdateableKey("name", String.self) { customer, name in
+            UpdateableKey("attributes.name", String.self) { customer, name in
                 customer.name = name
             },
-            UpdateableKey("surname", String.self) { customer, surname in
+            UpdateableKey("attributes.surname", String.self) { customer, surname in
                 customer.surname = surname
             },
-            UpdateableKey("personal_code", String.self) { customer, personalCode in
+            UpdateableKey("attributes.personal_code", String.self) { customer, personalCode in
                 customer.personalCode = personalCode
             }
         ]

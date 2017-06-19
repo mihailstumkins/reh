@@ -11,7 +11,11 @@ final class CustomerController: ResourceRepresentable {
     /// Here we have a controller that helps facilitate
     /// RESTful interactions with our Customers table
     func index(req: Request) throws -> ResponseRepresentable {
-        return try Customer.all().makeJSON()
+
+        let customers = try Customer.all().makeJSON()
+        var json = JSON()
+        try json.set("data", customers)
+        return json
     }
 
     /// When consumers call 'POST' on '/customer' with valid JSON
@@ -60,6 +64,8 @@ final class CustomerController: ResourceRepresentable {
         // Update the customer with all of the properties from
         // the new customer
         customer.name = new.name
+        customer.surname = new.surname
+        customer.personalCode = new.personalCode
         try customer.save()
         return customer
     }

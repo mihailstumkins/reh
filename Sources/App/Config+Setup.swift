@@ -1,5 +1,7 @@
 import LeafProvider
 import FluentProvider
+import AuthProvider
+import JWTProvider
 
 extension Config {
     public func setup() throws {
@@ -12,6 +14,8 @@ extension Config {
     private func setupProviders() throws {
         try addProvider(LeafProvider.Provider.self)
         try addProvider(FluentProvider.Provider.self)
+        try addProvider(AuthProvider.Provider.self)
+        try addProvider(JWTProvider.Provider.self)
     }
 
     private func addPreparations() {
@@ -21,6 +25,7 @@ extension Config {
         preparations.append(Physician.self)
         preparations.append(Service.self)
         preparations.append(User.self)
+        preparations.append(Token.self)
         preparations.append(Pivot<Order, OrderService>.self)
         preparations.append(Pivot<Physician, Service>.self)
     }

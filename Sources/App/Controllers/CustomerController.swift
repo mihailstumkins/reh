@@ -3,7 +3,7 @@ import HTTP
 
 import Vapor
 import HTTP
-
+/*
 /// Here we have a controller that helps facilitate
 /// RESTful interactions with our Customers table
 final class CustomerController: ResourceRepresentable {
@@ -102,3 +102,4 @@ extension Request {
 ///
 /// This will allow it to be passed by type.
 extension CustomerController: EmptyInitializable { }
+*/

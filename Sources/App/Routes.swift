@@ -11,8 +11,23 @@ final class Routes: RouteCollection {
         builder.get { req in
             return try self.view.make("welcome")
         }
-        
+        /*
+        builder.get("orders") { req in
+            return try Order.all().makeJSON()
+        }
+
+        builder.get("test/orders") { req in
+            guard let customer = try Customer.all().first else {
+                throw Abort.badRequest
+            }
+
+            let order = Order(customerId: customer.id!, applicant: "someone", address: "somewhere")
+            try order.save()
+            return try order.makeJSON()
+        }
+        */
+
         /// GET /customer/...
-        builder.resource("customers", CustomerController())
+//        builder.resource("customers", CustomerController())
     }
 }

@@ -16,5 +16,12 @@ extension Config {
 
     private func addPreparations() {
         preparations.append(Customer.self)
+        preparations.append(Order.self)
+        preparations.append(OrderService.self)
+        preparations.append(Physician.self)
+        preparations.append(Service.self)
+        preparations.append(User.self)
+        preparations.append(Pivot<Order, OrderService>.self)
+        preparations.append(Pivot<Physician, Service>.self)
     }
 }
